@@ -2,14 +2,14 @@
   "id": "day-night-theme",
   "title": "Day/Night Theme Switcher",
   "description": "Automatically switches the Foundry UI between dark and light themes based on the in-game sunrise and sunset times provided by Calendaria.",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": "12",
     "verified": "13"
   },
   "authors": [
     {
-      "name": "You"
+      "name": "Neon"
     }
   ],
   "relationships": {
