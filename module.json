@@ -30,7 +30,7 @@
       "path": "lang/en.json"
     }
   ],
-  "url": "",
-  "manifest": "",
-  "download": ""
+  "url": "https://github.com/neonbasschild/day-night-theme",
+  "manifest": "https://github.com/neonbasschild/day-night-theme/releases/tag/v1.0.0/module.json",
+  "download": "https://github.com/neonbasschild/day-night-theme/releases/tag/v1.0.0/module.zip"
 }
