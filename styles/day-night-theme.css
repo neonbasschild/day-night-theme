@@ -1,0 +1,222 @@
+/*
+ * Day/Night Theme Switcher — day-night-theme.css
+ *
+ * Strategy
+ * --------
+ * We add `dnt-day` or `dnt-night` to <body>.
+ * Foundry v12/v13 exposes its entire colour palette through CSS custom
+ * properties (variables) on :root / body.  By re-declaring those variables
+ * inside our own body class selectors we can flip the whole UI palette
+ * without touching any Foundry core DOM or settings.
+ *
+ * The transition is handled via a separate `--dnt-transition` property set
+ * from JavaScript so the user-configured duration is respected.
+ *
+ * Light-theme values are taken from Foundry's built-in light palette.
+ * Dark-theme values are taken from Foundry's built-in dark / foundry palette.
+ *
+ * If you use a custom theme module alongside this one, you may need to
+ * increase the specificity of the overrides below or adjust the variable names
+ * to match your theme module's palette.
+ */
+
+/* ── Transition wrapper ─────────────────────────────────────────────────────── */
+
+body {
+  --dnt-transition: 1500ms;  /* default; overridden by JS */
+}
+
+/*
+ * Apply CSS transitions to the properties that visibly change between themes.
+ * We limit the selector to `body.dnt-day, body.dnt-night` so we don't
+ * accidentally slow down unrelated renders before the module has evaluated.
+ */
+body.dnt-day *,
+body.dnt-night * {
+  transition:
+    background-color  var(--dnt-transition) ease,
+    color             var(--dnt-transition) ease,
+    border-color      var(--dnt-transition) ease,
+    box-shadow        var(--dnt-transition) ease !important;
+}
+
+/* ── Night (dark) theme ─────────────────────────────────────────────────────── */
+/*
+ * Foundry's dark palette variables — these are the defaults in the
+ * "Foundry" (dark) theme, listed here so the night state explicitly sets them.
+ * Adjust as needed if you use a different base theme.
+ */
+
+body.dnt-night {
+  /* Core surface colours */
+  --color-bg:                        #1a1a1a;
+  --color-bg-option:                 #0d0d0d;
+  --color-bg-btn:                    #191813;
+
+  /* Border colours */
+  --color-border-dark:               #000000;
+  --color-border-light:              #7a7971;
+  --color-border-highlight:          #ff6400;
+  --color-border-highlight-alt:      #ffd700;
+
+  /* Text colours */
+  --color-text-dark-primary:         #c9c7b8;
+  --color-text-dark-secondary:       #9e9e8c;
+  --color-text-dark-inactive:        #666666;
+  --color-text-dark-header:          #ffffff;
+  --color-text-light-primary:        #191813;
+  --color-text-light-secondary:      #4b4a44;
+  --color-text-light-inactive:       #999999;
+  --color-text-light-header:         #000000;
+  --color-text-hyperlink:            #ff6400;
+
+  /* Shadows */
+  --color-shadow-dark:               #000000;
+  --color-shadow-light:              rgba(0, 0, 0, 0.5);
+  --color-shadow-primary:            rgba(255, 100, 0, 0.35);
+
+  /* UI element fills */
+  --color-warm-1:   #7a0000;
+  --color-warm-2:   #a03000;
+  --color-warm-3:   #c04000;
+  --color-cool-3:   #0b2038;
+  --color-cool-4:   #0d2b45;
+  --color-cool-5:   #122d50;
+
+  /* Scrollbar */
+  scrollbar-color: #3a3a3a #1a1a1a;
+}
+
+/* ── Day (light) theme ──────────────────────────────────────────────────────── */
+/*
+ * Approximates Foundry's built-in light/fantasy palette.
+ * Adjust the values below to match the light theme you prefer.
+ */
+
+body.dnt-day {
+  /* Core surface colours */
+  --color-bg:                        #f0ece4;
+  --color-bg-option:                 #e4dfd6;
+  --color-bg-btn:                    #ece8de;
+
+  /* Border colours */
+  --color-border-dark:               #7a6a53;
+  --color-border-light:              #c9c0b0;
+  --color-border-highlight:          #a03000;
+  --color-border-highlight-alt:      #8b6914;
+
+  /* Text colours */
+  --color-text-dark-primary:         #191813;
+  --color-text-dark-secondary:       #4b4a44;
+  --color-text-dark-inactive:        #999999;
+  --color-text-dark-header:          #000000;
+  --color-text-light-primary:        #c9c7b8;
+  --color-text-light-secondary:      #9e9e8c;
+  --color-text-light-inactive:       #666666;
+  --color-text-light-header:         #ffffff;
+  --color-text-hyperlink:            #a03000;
+
+  /* Shadows */
+  --color-shadow-dark:               rgba(0, 0, 0, 0.4);
+  --color-shadow-light:              rgba(0, 0, 0, 0.15);
+  --color-shadow-primary:            rgba(160, 48, 0, 0.25);
+
+  /* UI element fills */
+  --color-warm-1:   #f5d0b0;
+  --color-warm-2:   #e8b888;
+  --color-warm-3:   #c08050;
+  --color-cool-3:   #c8d8e8;
+  --color-cool-4:   #b8ccde;
+  --color-cool-5:   #a8c0d4;
+
+  /* Scrollbar */
+  scrollbar-color: #c9c0b0 #f0ece4;
+}
+
+/* ── Foundry v13 application theming ────────────────────────────────────────── */
+/*
+ * v13 ApplicationV2 windows carry `.themed.theme-dark` or `.themed.theme-light`.
+ * We nudge their data-theme attribute via CSS so their internal variables update.
+ * JS cannot easily change ApplicationV2's internal colour variables, but we can
+ * override the variables that `.themed` exposes at the window level.
+ */
+
+body.dnt-night .themed {
+  --app-bg: #1f1f1f;
+  --app-bg-header: #111111;
+  --app-border: #000000;
+  --app-text: #c9c7b8;
+}
+
+body.dnt-day .themed {
+  --app-bg: #f5f0e8;
+  --app-bg-header: #e0d8cc;
+  --app-border: #b0a898;
+  --app-text: #191813;
+}
+
+/* ── Body background ────────────────────────────────────────────────────────── */
+
+body.dnt-night {
+  background-color: #1a1a1a;
+  color: #c9c7b8;
+}
+
+body.dnt-day {
+  background-color: #f0ece4;
+  color: #191813;
+}
+
+/* ── UI applications & windows ──────────────────────────────────────────────── */
+
+body.dnt-night #interface,
+body.dnt-night .app,
+body.dnt-night .window-content {
+  background: var(--color-bg);
+  color: var(--color-text-dark-primary);
+}
+
+body.dnt-day #interface,
+body.dnt-day .app,
+body.dnt-day .window-content {
+  background: var(--color-bg);
+  color: var(--color-text-dark-primary);
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────────────────── */
+
+body.dnt-night #sidebar,
+body.dnt-night #sidebar .directory-list {
+  background-color: #141414;
+}
+
+body.dnt-day #sidebar,
+body.dnt-day #sidebar .directory-list {
+  background-color: #e4dfd6;
+}
+
+/* ── Navigation bar ─────────────────────────────────────────────────────────── */
+
+body.dnt-night #navigation .scene.nav-item {
+  background-color: #2a2a2a;
+  border-color: #000;
+}
+
+body.dnt-day #navigation .scene.nav-item {
+  background-color: #ddd8cc;
+  border-color: #b0a898;
+}
+
+/* ── Hotbar ─────────────────────────────────────────────────────────────────── */
+
+body.dnt-night #hotbar .bar-controls,
+body.dnt-night #hotbar .macro {
+  background-color: #1f1f1f;
+  border-color: #000;
+}
+
+body.dnt-day #hotbar .bar-controls,
+body.dnt-day #hotbar .macro {
+  background-color: #e4dfd6;
+  border-color: #c9c0b0;
+}
